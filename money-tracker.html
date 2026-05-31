@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CashCouple 💸 — Where Did Our Money Go?!</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#FFF9F0;
+  --card:#FFFFFF;
+  --green:#22C55E;
+  --green-light:#DCFCE7;
+  --red:#EF4444;
+  --red-light:#FEE2E2;
+  --yellow:#F59E0B;
+  --yellow-light:#FEF3C7;
+  --blue:#3B82F6;
+  --blue-light:#DBEAFE;
+  --purple:#8B5CF6;
+  --purple-light:#EDE9FE;
+  --dark:#1C1917;
+  --muted:#78716C;
+  --border:#E7E5E4;
+  --radius:16px;
+  --shadow:0 4px 24px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+
+/* HEADER */
+header{background:var(--dark);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Fredoka One',cursive;font-size:1.6rem;color:#FCD34D;letter-spacing:.5px}
+.logo span{color:#FFF}
+.tagline{font-size:12px;color:#A8A29E;display:none}
+@media(min-width:600px){.tagline{display:block}}
+
+/* NAV TABS */
+nav{display:flex;gap:4px;overflow-x:auto;padding:1.2rem 1.5rem .4rem;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tab-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;padding:8px 16px;border-radius:50px;border:2.5px solid var(--border);background:var(--card);cursor:pointer;white-space:nowrap;transition:all .2s;color:var(--muted)}
+.tab-btn.active,.tab-btn:hover{background:var(--dark);color:#FCD34D;border-color:var(--dark);transform:translateY(-1px)}
+.tab-btn .tab-icon{margin-right:5px}
+
+/* MAIN */
+main{padding:1rem 1.5rem 4rem;max-width:860px;margin:0 auto}
+.section{display:none}.section.active{display:block}
+
+/* STATS ROW */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:1rem;border:2px solid var(--border);position:relative;overflow:hidden;transition:transform .15s}
+.stat-card:hover{transform:translateY(-2px)}
+.stat-emoji{font-size:1.6rem;margin-bottom:4px}
+.stat-num{font-family:'Fredoka One',cursive;font-size:1.6rem;line-height:1}
+.stat-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+.stat-card.green{background:var(--green-light);border-color:#86EFAC}
+.stat-card.green .stat-num{color:#15803D}
+.stat-card.red{background:var(--red-light);border-color:#FCA5A5}
+.stat-card.red .stat-num{color:#B91C1C}
+.stat-card.yellow{background:var(--yellow-light);border-color:#FCD34D}
+.stat-card.yellow .stat-num{color:#92400E}
+.stat-card.blue{background:var(--blue-light);border-color:#93C5FD}
+.stat-card.blue .stat-num{color:#1D4ED8}
+
+/* ALERT */
+.alert{border-radius:var(--radius);padding:12px 16px;font-size:14px;font-weight:700;margin-bottom:1.2rem;border:2px solid transparent;display:flex;align-items:center;gap:8px}
+.alert.ok{background:var(--green-light);border-color:#86EFAC;color:#15803D}
+.alert.warn{background:var(--yellow-light);border-color:#FCD34D;color:#92400E}
+.alert.danger{background:var(--red-light);border-color:#FCA5A5;color:#B91C1C}
+.alert-emoji{font-size:1.2rem}
+
+/* CARDS */
+.card{background:var(--card);border-radius:var(--radius);padding:1.2rem;border:2px solid var(--border);margin-bottom:12px}
+.card-title{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.card-title span{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800}
+
+/* ROWS */
+.item-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1.5px dashed var(--border);transition:background .1s}
+.item-row:last-child{border-bottom:none}
+.item-name{flex:1;font-size:14px;font-weight:700}
+.item-amt{font-size:14px;font-weight:800;min-width:80px;text-align:right}
+.item-amt.income{color:var(--green)}
+.item-amt.expense{color:var(--red)}
+.badge{font-size:11px;font-weight:800;padding:3px 9px;border-radius:50px;white-space:nowrap}
+.badge-you{background:#DBEAFE;color:#1D4ED8}
+.badge-partner{background:#EDE9FE;color:#6D28D9}
+.badge-both{background:#FEF3C7;color:#92400E}
+.cat-badge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:50px}
+.cat-housing{background:#DBEAFE;color:#1D4ED8}
+.cat-food{background:#DCFCE7;color:#15803D}
+.cat-transport{background:#FEF3C7;color:#92400E}
+.cat-utilities{background:#E0E7FF;color:#3730A3}
+.cat-health{background:#FCE7F3;color:#9D174D}
+.cat-entertainment{background:#EDE9FE;color:#6D28D9}
+.cat-debt{background:#FEE2E2;color:#B91C1C}
+.cat-other{background:#F5F5F4;color:#57534E}
+.del-btn{background:none;border:none;cursor:pointer;font-size:16px;opacity:.4;transition:opacity .15s;padding:2px 4px}
+.del-btn:hover{opacity:1}
+
+/* ADD ROW */
+.add-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.add-row input,.add-row select{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:9px 12px;border-radius:10px;border:2px solid var(--border);background:var(--bg);color:var(--dark);outline:none;transition:border-color .15s}
+.add-row input:focus,.add-row select:focus{border-color:var(--dark)}
+.add-row input[type=text]{flex:1;min-width:120px}
+.add-row input[type=number]{width:110px}
+.add-btn{font-family:'Fredoka One',cursive;font-size:14px;padding:9px 18px;border-radius:10px;border:2.5px solid var(--dark);background:var(--dark);color:#FCD34D;cursor:pointer;white-space:nowrap;transition:all .15s}
+.add-btn:hover{background:#FCD34D;color:var(--dark);transform:scale(1.03)}
+
+/* BREAKDOWN BAR */
+.breakdown-item{margin-bottom:10px}
+.breakdown-label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:3px}
+.bar-track{background:var(--border);border-radius:50px;height:12px;overflow:hidden}
+.bar-fill{height:12px;border-radius:50px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* HEALTH CHECKS */
+.health-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;font-weight:700}
+
+/* SAVINGS */
+.saving-bar{margin-top:6px}
+.saving-labels{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-top:4px}
+
+/* DEBT */
+.debt-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1.5px dashed var(--border)}
+.debt-item:last-child{border-bottom:none}
+.debt-name{font-size:14px;font-weight:800}
+.debt-sub{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}
+.debt-amt{font-size:15px;font-weight:800;color:var(--red);white-space:nowrap}
+
+/* TIPS */
+.tip-card{background:var(--card);border-radius:var(--radius);padding:1.2rem;border:2px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;transition:transform .15s}
+.tip-card:hover{transform:translateY(-2px)}
+.tip-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;border-radius:5px 0 0 5px}
+.tip-card.high::before{background:var(--green)}
+.tip-card.med::before{background:var(--yellow)}
+.tip-card.low::before{background:var(--blue)}
+.tip-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;padding-left:8px}
+.tip-emoji{font-size:1.4rem}
+.tip-title{font-family:'Fredoka One',cursive;font-size:1rem;flex:1}
+.tip-impact{font-size:10px;font-weight:800;padding:3px 9px;border-radius:50px;text-transform:uppercase;letter-spacing:.04em}
+.tip-impact.high{background:var(--green-light);color:#15803D}
+.tip-impact.med{background:var(--yellow-light);color:#92400E}
+.tip-impact.low{background:var(--blue-light);color:#1D4ED8}
+.tip-body{font-size:13px;color:var(--muted);line-height:1.6;padding-left:8px}
+.tip-save{font-size:13px;font-weight:800;color:var(--green);margin-top:6px;padding-left:8px}
+
+/* CTA BUTTON */
+.cta-btn{font-family:'Fredoka One',cursive;font-size:15px;padding:12px 22px;border-radius:12px;border:2.5px solid var(--dark);background:var(--dark);color:#FCD34D;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;margin-top:12px}
+.cta-btn:hover{background:#FCD34D;color:var(--dark);transform:scale(1.03)}
+
+/* MONEY DATE BANNER */
+.banner{background:var(--dark);color:#FFF;border-radius:var(--radius);padding:1.2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px}
+.banner-emoji{font-size:2rem}
+.banner-text h3{font-family:'Fredoka One',cursive;font-size:1.1rem;color:#FCD34D}
+.banner-text p{font-size:13px;color:#D6D3D1;margin-top:2px}
+
+/* SECTION HEADER */
+.sec-header{margin-bottom:1rem}
+.sec-header h2{font-family:'Fredoka One',cursive;font-size:1.5rem}
+.sec-header p{font-size:13px;color:var(--muted);font-weight:700;margin-top:2px}
+
+/* PROGRESS */
+.progress-row{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-top:4px}
+
+/* CURRENCY */
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* FOOTER */
+footer{text-align:center;padding:2rem;font-size:12px;color:var(--muted);font-weight:700}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">💸 Cash<span>Couple</span></div>
+  <div class="tagline">Where did our money go?! 🤷</div>
+</header>
+
+<nav>
+  <button class="tab-btn active" onclick="sw('overview')"><span class="tab-icon">🏠</span> Overview</button>
+  <button class="tab-btn" onclick="sw('income')"><span class="tab-icon">💰</span> Income</button>
+  <button class="tab-btn" onclick="sw('expenses')"><span class="tab-icon">🛒</span> Expenses</button>
+  <button class="tab-btn" onclick="sw('savings')"><span class="tab-icon">🐷</span> Savings</button>
+  <button class="tab-btn" onclick="sw('debts')"><span class="tab-icon">😬</span> Debts</button>
+  <button class="tab-btn" onclick="sw('tips')"><span class="tab-icon">💡</span> Tips</button>
+</nav>
+
+<main>
+
+<!-- ===== OVERVIEW ===== -->
+<div id="tab-overview" class="section active">
+  <div class="sec-header"><h2>Your Money HQ 🎯</h2><p>The full picture — no sugarcoating.</p></div>
+  <div class="stats" id="ov-stats"></div>
+  <div id="ov-alert"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="card"><div class="card-title">Where's it going? 🔍</div><div id="ov-breakdown"></div></div>
+    <div>
+      <div class="card"><div class="card-title">Budget health ❤️‍🔥</div><div id="ov-health"></div></div>
+      <div class="card" style="margin-top:12px"><div class="card-title">Savings progress 🐷</div><div id="ov-sav"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INCOME ===== -->
+<div id="tab-income" class="section">
+  <div class="sec-header"><h2>Show Me The Money! 💰</h2><p>Add every source of income — yes, even that ₺50 you found in your jacket.</p></div>
+  <div class="stats" id="inc-stats"></div>
+  <div class="card"><div class="card-title">Monthly income <span id="inc-total-label"></span></div><div id="income-list"></div></div>
+  <div class="add-row">
+    <input type="text" id="inc-name" placeholder="e.g. Salary, freelance…"/>
+    <input type="number" id="inc-amt" placeholder="Amount ₺" min="0"/>
+    <select id="inc-who"><option value="You">You</option><option value="Partner">Partner</option><option value="Both">Both</option></select>
+    <button class="add-btn" onclick="addIncome()">+ Add 💰</button>
+  </div>
+</div>
+
+<!-- ===== EXPENSES ===== -->
+<div id="tab-expenses" class="section">
+  <div class="sec-header"><h2>The Damage 💸</h2><p>Be honest. We won't judge (much).</p></div>
+  <div class="stats" id="exp-stats"></div>
+  <div id="exp-cards"></div>
+  <div class="add-row">
+    <input type="text" id="exp-name" placeholder="e.g. Rent, Netflix…"/>
+    <input type="number" id="exp-amt" placeholder="Amount ₺" min="0"/>
+    <select id="exp-cat">
+      <option value="housing">🏠 Housing</option>
+      <option value="food">🍕 Food</option>
+      <option value="transport">🚗 Transport</option>
+      <option value="utilities">💡 Utilities</option>
+      <option value="health">💊 Health</option>
+      <option value="entertainment">🎬 Entertainment</option>
+      <option value="debt">💳 Debt payment</option>
+      <option value="other">📦 Other</option>
+    </select>
+    <button class="add-btn" onclick="addExpense()">+ Add 💸</button>
+  </div>
+</div>
+
+<!-- ===== SAVINGS ===== -->
+<div id="tab-savings" class="section">
+  <div class="sec-header"><h2>Future You Says Thanks 🐷</h2><p>Set goals. Actually save. Repeat.</p></div>
+  <div class="stats" id="sav-stats"></div>
+  <div class="card"><div class="card-title">Your goals 🎯</div><div id="sav-list"></div></div>
+  <div class="add-row">
+    <input type="text" id="sav-name" placeholder="e.g. Emergency fund…"/>
+    <input type="number" id="sav-target" placeholder="Target ₺" min="0"/>
+    <input type="number" id="sav-saved" placeholder="Saved so far ₺" min="0"/>
+    <button class="add-btn" onclick="addSaving()">+ Add 🎯</button>
+  </div>
+</div>
+
+<!-- ===== DEBTS ===== -->
+<div id="tab-debts" class="section">
+  <div class="sec-header"><h2>The Scary Numbers 😬</h2><p>Look your debts in the eye. They can't hurt you (much).</p></div>
+  <div class="stats" id="dbt-stats"></div>
+  <div class="card"><div class="card-title">Active debts 💳</div><div id="debt-list"></div></div>
+  <div class="add-row">
+    <input type="text" id="dbt-name" placeholder="e.g. Car loan…"/>
+    <input type="number" id="dbt-total" placeholder="Total owed ₺" min="0"/>
+    <input type="number" id="dbt-monthly" placeholder="Monthly payment ₺" min="0"/>
+    <button class="add-btn" onclick="addDebt()">+ Add 😬</button>
+  </div>
+</div>
+
+<!-- ===== TIPS ===== -->
+<div id="tab-tips" class="section">
+  <div class="sec-header"><h2>Save More, Stress Less 💡</h2><p>Personalised tips based on your actual numbers.</p></div>
+  <div id="tips-content"></div>
+</div>
+
+</main>
+
+<footer>Made with 💸 for couples who want to stop wondering where the money went.</footer>
+
+<script>
+const catLabel={housing:'🏠 Housing',food:'🍕 Food',transport:'🚗 Transport',utilities:'💡 Utilities',health:'💊 Health',entertainment:'🎬 Entertainment',debt:'💳 Debt payment',other:'📦 Other'};
+const catColors={housing:'#3B82F6',food:'#22C55E',transport:'#F59E0B',utilities:'#8B5CF6',health:'#EC4899',entertainment:'#6366F1',debt:'#EF4444',other:'#78716C'};
+
+let incomes=[{id:1,name:'Your salary',who:'You',amt:25000},{id:2,name:'Partner salary',who:'Partner',amt:20000}];
+let expenses=[{id:1,name:'Rent',cat:'housing',amt:8000},{id:2,name:'Electricity & water',cat:'utilities',amt:1200},{id:3,name:'Groceries',cat:'food',amt:3000},{id:4,name:'Transport',cat:'transport',amt:1500},{id:5,name:'Internet & phone',cat:'utilities',amt:600},{id:6,name:'Eating out',cat:'food',amt:1500},{id:7,name:'Health & pharmacy',cat:'health',amt:500},{id:8,name:'Entertainment',cat:'entertainment',amt:800}];
+let savings=[{id:1,name:'Emergency fund',target:30000,saved:8000},{id:2,name:'Holiday',target:10000,saved:2500}];
+let debts=[{id:1,name:'Car loan',total:40000,monthly:1200},{id:2,name:'Credit card',total:5000,monthly:800}];
+let nI=3,nE=9,nS=3,nD=3;
+
+function fmt(n){return '₺'+Number(n).toLocaleString('tr-TR');}
+function pct(a,b){return b>0?Math.round((a/b)*100):0;}
+function totalIncome(){return incomes.reduce((s,x)=>s+x.amt,0);}
+function totalExp(){return expenses.reduce((s,x)=>s+x.amt,0);}
+
+function sw(name){
+  const tabs=['overview','income','expenses','savings','debts','tips'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',tabs[i]===name));
+  tabs.forEach(t=>{document.getElementById('tab-'+t).classList.toggle('active',t===name);});
+  render();
+}
+
+function render(){renderOv();renderIncome();renderExpenses();renderSavings();renderDebts();renderTips();}
+
+function renderOv(){
+  const inc=totalIncome(),exp=totalExp(),left=inc-exp,savRate=pct(left,inc);
+  document.getElementById('ov-stats').innerHTML=`
+    <div class="stat-card green"><div class="stat-emoji">💰</div><div class="stat-num">${fmt(inc)}</div><div class="stat-label">Monthly in</div></div>
+    <div class="stat-card red"><div class="stat-emoji">💸</div><div class="stat-num">${fmt(exp)}</div><div class="stat-label">Monthly out</div></div>
+    <div class="stat-card ${left>=0?'green':'red'}"><div class="stat-emoji">${left>=0?'🎉':'😱'}</div><div class="stat-num">${fmt(Math.abs(left))}</div><div class="stat-label">${left>=0?'Left over':'Overspent'}</div></div>
+    <div class="stat-card ${savRate>=20?'green':savRate>=10?'yellow':'red'}"><div class="stat-emoji">${savRate>=20?'🚀':savRate>=10?'😐':'😬'}</div><div class="stat-num">${savRate}%</div><div class="stat-label">Saving rate</div></div>
+  `;
+  const al=document.getElementById('ov-alert');
+  if(left<0) al.innerHTML=`<div class="alert danger"><span class="alert-emoji">🚨</span> Uh oh! You're spending ${fmt(Math.abs(left))} MORE than you earn. Houston, we have a problem.</div>`;
+  else if(savRate<10) al.innerHTML=`<div class="alert warn"><span class="alert-emoji">⚠️</span> Saving rate is under 10%! Try to save at least ${fmt(Math.round(inc*.1))} per month. You can do it!</div>`;
+  else al.innerHTML=`<div class="alert ok"><span class="alert-emoji">🎉</span> Nice! ${fmt(left)} left each month. Put it to work — don't let it vanish on coffee.</div>`;
+
+  const cats={};
+  expenses.forEach(e=>{cats[e.cat]=(cats[e.cat]||0)+e.amt;});
+  const sorted=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const tot=totalExp()||1;
+  document.getElementById('ov-breakdown').innerHTML=sorted.map(([cat,amt])=>{
+    const p=pct(amt,tot);
+    return `<div class="breakdown-item"><div class="breakdown-label"><span>${catLabel[cat]}</span><span>${fmt(amt)} · ${p}%</span></div><div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${catColors[cat]}"></div></div></div>`;
+  }).join('');
+
+  const rules=[
+    {emoji:'🏠',label:'Housing < 35% of income',ok:(cats.housing||0)/inc<.35},
+    {emoji:'🍕',label:'Food < 20% of income',ok:((cats.food||0))/inc<.20},
+    {emoji:'🐷',label:'Saving rate ≥ 10%',ok:savRate>=10},
+    {emoji:'💳',label:'Debt payments < 20% income',ok:debts.reduce((s,x)=>s+x.monthly,0)/inc<.20},
+  ];
+  document.getElementById('ov-health').innerHTML=rules.map(r=>`<div class="health-item"><span>${r.ok?'✅':'❌'}</span><span style="color:${r.ok?'var(--dark)':'var(--muted)'}">${r.emoji} ${r.label}</span></div>`).join('');
+
+  const totSaved=savings.reduce((s,x)=>s+x.saved,0);
+  const totTarget=savings.reduce((s,x)=>s+x.target,0)||1;
+  const sp=Math.min(100,pct(totSaved,totTarget));
+  document.getElementById('ov-sav').innerHTML=`
+    <div class="breakdown-label" style="margin-bottom:4px"><span>${fmt(totSaved)} saved</span><span>of ${fmt(totTarget)}</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:${sp}%;background:var(--green)"></div></div>
+    <div style="font-size:12px;color:var(--muted);font-weight:700;margin-top:4px">${sp}% of all goals reached ${sp>=100?'🎉':'💪'}</div>
+  `;
+}
+
+function renderIncome(){
+  const tot=totalIncome();
+  document.getElementById('inc-stats').innerHTML=`
+    <div class="stat-card green"><div class="stat-emoji">💰</div><div class="stat-num">${fmt(tot)}</div><div class="stat-label">Total monthly</div></div>
+    <div class="stat-card blue"><div class="stat-emoji">👤</div><div class="stat-num">${fmt(incomes.filter(x=>x.who==='You').reduce((s,x)=>s+x.amt,0))}</div><div class="stat-label">Your income</div></div>
+    <div class="stat-card"><div class="stat-emoji">👥</div><div class="stat-num">${fmt(incomes.filter(x=>x.who==='Partner').reduce((s,x)=>s+x.amt,0))}</div><div class="stat-label">Partner's income</div></div>
+  `;
+  document.getElementById('inc-total-label').textContent=fmt(tot);
+  const list=document.getElementById('income-list');
+  list.innerHTML=incomes.length?incomes.map(i=>`<div class="item-row">
+    <span class="item-name">${i.name}</span>
+    <span class="badge ${i.who==='You'?'badge-you':i.who==='Partner'?'badge-partner':'badge-both'}">${i.who}</span>
+    <span class="item-amt income">+${fmt(i.amt)}</span>
+    <button class="del-btn" onclick="delIncome(${i.id})" title="Delete">🗑️</button>
+  </div>`).join(''):'<p style="color:var(--muted);font-size:14px;font-weight:700;padding:8px 0">No income yet. Add some! 💰</p>';
+}
+function delIncome(id){incomes=incomes.filter(x=>x.id!==id);renderIncome();renderOv();renderTips();}
+function addIncome(){
+  const n=document.getElementById('inc-name').value.trim(),a=parseFloat(document.getElementById('inc-amt').value);
+  if(!n||!a||a<=0)return;
+  incomes.push({id:nI++,name:n,who:document.getElementById('inc-who').value,amt:a});
+  document.getElementById('inc-name').value='';document.getElementById('inc-amt').value='';
+  renderIncome();renderOv();renderTips();
+}
+
+function renderExpenses(){
+  const tot=totalExp(),inc=totalIncome();
+  document.getElementById('exp-stats').innerHTML=`
+    <div class="stat-card red"><div class="stat-emoji">💸</div><div class="stat-num">${fmt(tot)}</div><div class="stat-label">Total monthly</div></div>
+    <div class="stat-card ${pct(tot,inc)<80?'yellow':'red'}"><div class="stat-emoji">${pct(tot,inc)<80?'😅':'😱'}</div><div class="stat-num">${pct(tot,inc)}%</div><div class="stat-label">Of income</div></div>
+    <div class="stat-card green"><div class="stat-emoji">🤔</div><div class="stat-num">${incomes.length===0?'?':fmt(Math.max(0,inc-tot))}</div><div class="stat-label">Remaining</div></div>
+  `;
+  const cats={};
+  expenses.forEach(e=>{if(!cats[e.cat])cats[e.cat]=[];cats[e.cat].push(e);});
+  const order=['housing','utilities','food','transport','health','entertainment','debt','other'];
+  let html='';
+  order.forEach(cat=>{
+    const group=cats[cat];if(!group)return;
+    const catTotal=group.reduce((s,x)=>s+x.amt,0);
+    html+=`<div class="card"><div class="card-title">${catLabel[cat]}<span>${fmt(catTotal)}</span></div>`;
+    group.forEach(e=>{html+=`<div class="item-row"><span class="item-name">${e.name}</span><span class="item-amt expense">-${fmt(e.amt)}</span><button class="del-btn" onclick="delExp(${e.id})" title="Delete">🗑️</button></div>`;});
+    html+='</div>';
+  });
+  document.getElementById('exp-cards').innerHTML=html||'<div class="card"><p style="color:var(--muted);font-size:14px;font-weight:700">No expenses yet. Enjoy it while it lasts! 😂</p></div>';
+}
+function delExp(id){expenses=expenses.filter(x=>x.id!==id);renderExpenses();renderOv();renderTips();}
+function addExpense(){
+  const n=document.getElementById('exp-name').value.trim(),a=parseFloat(document.getElementById('exp-amt').value);
+  if(!n||!a||a<=0)return;
+  expenses.push({id:nE++,name:n,cat:document.getElementById('exp-cat').value,amt:a});
+  document.getElementById('exp-name').value='';document.getElementById('exp-amt').value='';
+  renderExpenses();renderOv();renderTips();
+}
+
+function renderSavings(){
+  const left=Math.max(0,totalIncome()-totalExp());
+  const totSaved=savings.reduce((s,x)=>s+x.saved,0);
+  const totTarget=savings.reduce((s,x)=>s+x.target,0);
+  document.getElementById('sav-stats').innerHTML=`
+    <div class="stat-card green"><div class="stat-emoji">🐷</div><div class="stat-num">${fmt(totSaved)}</div><div class="stat-label">Total saved</div></div>
+    <div class="stat-card yellow"><div class="stat-emoji">🎯</div><div class="stat-num">${fmt(totTarget)}</div><div class="stat-label">Total goals</div></div>
+    <div class="stat-card blue"><div class="stat-emoji">✨</div><div class="stat-num">${fmt(left)}</div><div class="stat-label">Available to save</div></div>
+  `;
+  const list=document.getElementById('sav-list');
+  list.innerHTML=savings.length?savings.map(s=>{
+    const p=Math.min(100,pct(s.saved,s.target));
+    const rem=s.target-s.saved;
+    const months=left>0&&rem>0?Math.ceil(rem/left):null;
+    const emoji=p>=100?'🎉':p>=50?'💪':p>=25?'🌱':'🌰';
+    return `<div style="padding:10px 0;border-bottom:1.5px dashed var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-weight:800;font-size:14px">${emoji} ${s.name}</span>
+        <button class="del-btn" onclick="delSav(${s.id})" title="Delete">🗑️</button>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${p}%;background:var(--green)"></div></div>
+      <div class="progress-row"><span>${fmt(s.saved)} of ${fmt(s.target)}</span><span>${p}%${months?' · ~'+months+' months':''}${p>=100?' — Done! 🎉':''}</span></div>
+    </div>`;
+  }).join(''):'<p style="color:var(--muted);font-size:14px;font-weight:700;padding:8px 0">No savings goals yet. Future you is crying. 😢</p>';
+}
+function delSav(id){savings=savings.filter(x=>x.id!==id);renderSavings();renderOv();}
+function addSaving(){
+  const n=document.getElementById('sav-name').value.trim(),t=parseFloat(document.getElementById('sav-target').value),sv=parseFloat(document.getElementById('sav-saved').value)||0;
+  if(!n||!t||t<=0)return;
+  savings.push({id:nS++,name:n,target:t,saved:sv});
+  document.getElementById('sav-name').value='';document.getElementById('sav-target').value='';document.getElementById('sav-saved').value='';
+  renderSavings();renderOv();
+}
+
+function renderDebts(){
+  const tot=debts.reduce((s,x)=>s+x.total,0);
+  const mon=debts.reduce((s,x)=>s+x.monthly,0);
+  const inc=totalIncome();
+  document.getElementById('dbt-stats').innerHTML=`
+    <div class="stat-card red"><div class="stat-emoji">😬</div><div class="stat-num">${fmt(tot)}</div><div class="stat-label">Total owed</div></div>
+    <div class="stat-card yellow"><div class="stat-emoji">📅</div><div class="stat-num">${fmt(mon)}</div><div class="stat-label">Monthly payments</div></div>
+    <div class="stat-card ${inc>0&&pct(mon,inc)<20?'green':'red'}"><div class="stat-emoji">${inc>0&&pct(mon,inc)<20?'😌':'😰'}</div><div class="stat-num">${pct(mon,inc)}%</div><div class="stat-label">Of income</div></div>
+  `;
+  const list=document.getElementById('debt-list');
+  list.innerHTML=debts.length?debts.map(d=>{
+    const months=d.monthly>0?Math.ceil(d.total/d.monthly):null;
+    return `<div class="debt-item">
+      <div style="flex:1">
+        <div class="debt-name">💳 ${d.name}</div>
+        <div class="debt-sub">${fmt(d.monthly)}/month · ${months?'~'+months+' months to freedom 🏁':'add a payment amount'}</div>
+      </div>
+      <span class="debt-amt">${fmt(d.total)}</span>
+      <button class="del-btn" onclick="delDebt(${d.id})" title="Delete">🗑️</button>
+    </div>`;
+  }).join(''):'<p style="color:var(--muted);font-size:14px;font-weight:700;padding:8px 0">No debts! You legend! 🏆</p>';
+}
+function delDebt(id){debts=debts.filter(x=>x.id!==id);renderDebts();renderOv();renderTips();}
+function addDebt(){
+  const n=document.getElementById('dbt-name').value.trim(),t=parseFloat(document.getElementById('dbt-total').value),m=parseFloat(document.getElementById('dbt-monthly').value)||0;
+  if(!n||!t||t<=0)return;
+  debts.push({id:nD++,name:n,total:t,monthly:m});
+  document.getElementById('dbt-name').value='';document.getElementById('dbt-total').value='';document.getElementById('dbt-monthly').value='';
+  renderDebts();renderOv();renderTips();
+}
+
+function renderTips(){
+  const inc=totalIncome(),exp=totalExp(),left=inc-exp,savRate=pct(left,inc);
+  const cats={};expenses.forEach(e=>{cats[e.cat]=(cats[e.cat]||0)+e.amt;});
+  const creditDebt=debts.find(d=>d.name.toLowerCase().includes('credit'));
+  const tips=[];
+
+  if(left<0) tips.push({emoji:'🚨',title:'Stop the bleeding — now',impact:'high',body:`You're spending ${fmt(Math.abs(left))} more than you earn every month. That's like trying to fill a bathtub with the drain open. Look at your expense tab and cut something — anything — today.`,save:null});
+  if((cats.food||0)/inc>0.2) tips.push({emoji:'🍕',title:'Your food bill is spicy',impact:'high',body:`Food is eating ${pct(cats.food||0,inc)}% of your income. Meal prep on Sundays, shop with a list, and cut back on eating out to save big. Even 2 fewer restaurant meals a month adds up.`,save:'Potential saving: ₺500–1,000/month'});
+  if(creditDebt) tips.push({emoji:'💳',title:'Kill the credit card first',impact:'high',body:`Credit card debt is the most expensive money you owe — Turkish rates can exceed 4% per month. Throw every spare lira at it before anything else. After it's gone, redirect that payment to savings.`,save:'Interest saved: hundreds of ₺ per month'});
+  if(savRate<10&&left>=0) tips.push({emoji:'🤖',title:'Automate your savings',impact:'high',body:`You have ${fmt(left)} left over but no automatic savings. Set up an auto-transfer on payday — even ${fmt(Math.round(inc*0.1))} — to a separate account. If you don't see it, you won't spend it.`,save:`Could save: ${fmt(Math.round(inc*0.1)*12)}/year`});
+  if((cats.entertainment||0)>0) tips.push({emoji:'🎬',title:'Set a fun money budget',impact:'med',body:`Entertainment is ${fmt(cats.entertainment||0)}/month. Not bad — but it creeps up. Agree on a fixed fun budget with your partner and use cash or a prepaid card. When it's gone, it's gone. Movie night at home FTW.`,save:'Potential saving: ₺200–400/month'});
+  if((cats.utilities||0)>1500) tips.push({emoji:'💡',title:'Utilities audit time',impact:'med',body:`₺${fmt(cats.utilities||0)}/month on utilities seems high. Switch appliances off standby, run laundry at night, and check if you're on the best internet plan. Small changes, real savings.`,save:'Potential saving: ₺200–400/month'});
+  tips.push({emoji:'📅',title:'Monthly money date 🍷',impact:'low',body:`Once a month, sit down together (wine optional) and go through this tracker. Couples who talk about money regularly save more and argue less. Pick a date, add it to your calendar, make it a thing.`,save:null});
+  tips.push({emoji:'🛡️',title:'Build your emergency fund first',impact:'low',body:`Before anything else, save 3× your monthly expenses (≈${fmt(exp*3)}) in a liquid account. It's your financial airbag. Once it's full, redirect to goals and investments.`,save:`Target: ${fmt(exp*3)}`});
+
+  document.getElementById('tips-content').innerHTML=tips.map(t=>`
+    <div class="tip-card ${t.impact}">
+      <div class="tip-header">
+        <span class="tip-emoji">${t.emoji}</span>
+        <span class="tip-title">${t.title}</span>
+        <span class="tip-impact ${t.impact}">${t.impact==='high'?'High impact':t.impact==='med'?'Medium':'Good habit'}</span>
+      </div>
+      <div class="tip-body">${t.body}</div>
+      ${t.save?`<div class="tip-save">💚 ${t.save}</div>`:''}
+    </div>`).join('');
+}
+
+render();
+</script>
+</body>
+</html>
